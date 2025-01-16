@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat | AusVisa.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <a href="/" class="back-link">← Back to Home</a>
+            <img src="assets/logo.svg" alt="AusVisa.ai" class="chat-logo">
+        </header>
+
+        <main class="chat-main">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    <p>👋 Hi! I'm your AI visa assessment assistant. I can help you understand your visa options, calculate success probability, and estimate timelines and costs. What would you like to know?</p>
+                </div>
+            </div>
+
+            <form class="chat-input-form" id="chatForm">
+                <textarea 
+                    id="userInput" 
+                    placeholder="Type your message here..." 
+                    rows="1"
+                    autofocus
+                ></textarea>
+                <button type="submit" class="send-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>

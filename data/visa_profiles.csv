@@ -1,0 +1,11 @@
+age,education_level,work_experience,english_proficiency,occupation,salary_range,visa_granted,timeline_months,cost_aud
+32,Master,8,Superior,Software Engineer,100000-150000,1,6,4000
+28,Bachelor,4,Proficient,Accountant,70000-100000,1,8,3500
+35,PhD,10,Superior,Research Scientist,150000-200000,1,7,4500
+29,Bachelor,3,Competent,Marketing Manager,50000-70000,0,0,3000
+41,Master,15,Superior,Senior Developer,200000+,1,5,5000
+27,Diploma,2,Basic,Chef,40000-50000,0,0,2500
+33,Master,7,Proficient,Data Scientist,100000-150000,1,7,4000
+31,Bachelor,5,Competent,Business Analyst,70000-100000,1,9,3500
+38,PhD,12,Superior,Professor,150000-200000,1,6,4500
+25,Bachelor,1,Competent,Graduate Engineer,40000-50000,0,0,3000
