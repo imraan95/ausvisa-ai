@@ -2,10 +2,11 @@ from flask import Flask, jsonify, request, send_from_directory
 import os
 import pickle
 import re
+from ai_analyzer import analyze_profile, get_visa_requirements
 
 app = Flask(__name__)
 
-# Load the model
+# Load the model for basic scoring (fallback)
 try:
     with open('models/visa_model.pkl', 'rb') as f:
         model = pickle.load(f)
@@ -95,10 +96,14 @@ def process_chat():
         if missing_fields_msg:
             return jsonify({'response': missing_fields_msg})
         
-        # Calculate probability
-        probability = calculate_score(profile)
+        # Get AI analysis
+        ai_response = analyze_profile(profile)
         
-        # Get recommendations
+        if ai_response:
+            return jsonify({'response': ai_response})
+        
+        # Fallback to basic scoring if AI fails
+        probability = calculate_score(profile)
         recommendations = get_recommendations(probability)
         
         # Format response
@@ -125,6 +130,18 @@ def process_chat():
         print(f"Error in chat processing: {str(e)}")
         return jsonify({
             'response': 'I apologize, but I encountered an error while processing your request. Please try again with more specific information about your profile.'
+        })
+
+@app.route('/visa-requirements')
+def visa_requirements():
+    """Get detailed visa requirements"""
+    try:
+        requirements = get_visa_requirements()
+        return jsonify({'response': requirements if requirements else 'Unable to fetch visa requirements at this time.'})
+    except Exception as e:
+        print(f"Error fetching visa requirements: {str(e)}")
+        return jsonify({
+            'response': 'I apologize, but I encountered an error while fetching the visa requirements.'
         })
 
 @app.route('/health')
