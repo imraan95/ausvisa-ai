@@ -62,7 +62,13 @@ def generate_missing_fields_message(profile):
     if not missing:
         return None
     
-    return f"Could you please provide your {', '.join(missing[:-1])}{',' if len(missing) > 2 '' if len(missing) == 1 else ' and'} {missing[-1]}?"
+    if len(missing) == 1:
+        return f"Could you please provide your {missing[0]}?"
+    elif len(missing) == 2:
+        return f"Could you please provide your {missing[0]} and {missing[1]}?"
+    else:
+        formatted_missing = ', '.join(missing[:-1]) + ', and ' + missing[-1]
+        return f"Could you please provide your {formatted_missing}?"
 
 @app.route('/<path:path>')
 def serve_static(path):
