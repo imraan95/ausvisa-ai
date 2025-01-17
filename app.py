@@ -28,7 +28,7 @@ def extract_profile_from_message(message):
     # Extract education
     education_levels = ['PhD', 'Master', 'Bachelor', 'Diploma']
     for edu in education_levels:
-        if edu.lower() in message.lower():
+        if edu.lower() in message.lower() or f"{edu}'s".lower() in message.lower():
             profile['education_level'] = edu
             break
     
@@ -38,14 +38,31 @@ def extract_profile_from_message(message):
         profile['work_experience'] = int(exp_match.group(1))
     
     # Extract English proficiency
-    if 'advanced' in message.lower() or 'fluent' in message.lower():
+    if any(word in message.lower() for word in ['fluent', 'advanced', 'excellent', 'native']):
         profile['english_proficiency'] = 'Advanced'
-    elif 'intermediate' in message.lower() or 'good' in message.lower():
+    elif any(word in message.lower() for word in ['intermediate', 'good', 'moderate']):
         profile['english_proficiency'] = 'Intermediate'
-    elif 'basic' in message.lower() or 'beginner' in message.lower():
+    elif any(word in message.lower() for word in ['basic', 'beginner', 'elementary']):
         profile['english_proficiency'] = 'Basic'
     
     return profile
+
+def generate_missing_fields_message(profile):
+    """Generate a message asking for missing information"""
+    missing = []
+    if 'age' not in profile:
+        missing.append("age")
+    if 'education_level' not in profile:
+        missing.append("education level (e.g., Bachelor's, Master's, PhD)")
+    if 'work_experience' not in profile:
+        missing.append("years of work experience")
+    if 'english_proficiency' not in profile:
+        missing.append("English proficiency level (Basic, Intermediate, or Advanced)")
+    
+    if not missing:
+        return None
+    
+    return f"Could you please provide your {', '.join(missing[:-1])}{',' if len(missing) > 2 '' if len(missing) == 1 else ' and'} {missing[-1]}?"
 
 @app.route('/<path:path>')
 def serve_static(path):
@@ -67,10 +84,10 @@ def process_chat():
         # Extract profile information from message
         profile = extract_profile_from_message(message)
         
-        if not profile:
-            return jsonify({
-                'response': 'Could you please provide more information about your age, education, work experience, and English proficiency?'
-            })
+        # Check for missing information
+        missing_fields_msg = generate_missing_fields_message(profile)
+        if missing_fields_msg:
+            return jsonify({'response': missing_fields_msg})
         
         # Calculate probability
         probability = calculate_score(profile)
@@ -79,7 +96,13 @@ def process_chat():
         recommendations = get_recommendations(probability)
         
         # Format response
-        response = f"Based on your profile, I estimate a {int(probability * 100)}% success probability for your visa application.\n\n"
+        response = f"Based on your profile:\n"
+        response += f"- Age: {profile.get('age')} years\n"
+        response += f"- Education: {profile.get('education_level')}\n"
+        response += f"- Work Experience: {profile.get('work_experience')} years\n"
+        response += f"- English Proficiency: {profile.get('english_proficiency')}\n\n"
+        
+        response += f"I estimate a {int(probability * 100)}% success probability for your visa application.\n\n"
         response += f"Recommended Visa: {recommendations['recommendation']}\n"
         response += f"Confidence: {recommendations['confidence']}\n"
         
