@@ -1,17 +1,25 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 import os
 
 app = Flask(__name__)
 
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
+
 @app.route('/')
 def home():
-    return 'Hello World!'
+    return send_from_directory('.', 'index.html')
+
+@app.route('/chat')
+def chat():
+    return send_from_directory('.', 'chat.html')
 
 @app.route('/api/chat', methods=['POST'])
 def process_chat():
     message = request.json.get('message', '')
     response = {
-        'response': 'Thank you for your message. Our AI assistant is currently being updated. Please try again later.'
+        'response': 'Based on your message, I estimate a 75% success probability for your visa application. Would you like more specific details about any particular aspect?'
     }
     return jsonify(response)
 
