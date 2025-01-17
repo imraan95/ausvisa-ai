@@ -1,20 +1,19 @@
-import pandas as pd
-import numpy as np
 import os
 import pickle
+import random
 
 def create_sample_data():
     """Create a sample dataset if none exists"""
-    data = pd.DataFrame({
-        'age': np.random.randint(20, 60, 100),
-        'education_level': np.random.choice(['Bachelor', 'Master', 'PhD'], 100),
-        'work_experience': np.random.randint(0, 20, 100),
-        'english_proficiency': np.random.choice(['Basic', 'Intermediate', 'Advanced'], 100),
-        'visa_granted': np.random.choice([0, 1], 100, p=[0.3, 0.7])
-    })
-    
-    os.makedirs('data', exist_ok=True)
-    data.to_csv('data/visa_profiles.csv', index=False)
+    data = []
+    for _ in range(100):
+        profile = {
+            'age': random.randint(20, 60),
+            'education_level': random.choice(['Bachelor', 'Master', 'PhD']),
+            'work_experience': random.randint(0, 20),
+            'english_proficiency': random.choice(['Basic', 'Intermediate', 'Advanced']),
+            'visa_granted': random.choice([0, 1], p=[0.3, 0.7])
+        }
+        data.append(profile)
     return data
 
 def calculate_score(profile):
@@ -90,9 +89,15 @@ if __name__ == '__main__':
     # Create sample data if it doesn't exist
     if not os.path.exists('data/visa_profiles.csv'):
         data = create_sample_data()
+        os.makedirs('data', exist_ok=True)
+        with open('data/visa_profiles.csv', 'w') as f:
+            for profile in data:
+                f.write(','.join(map(str, profile.values())) + '\n')
+    
+    # Create models directory
+    os.makedirs('models', exist_ok=True)
     
     # Save the scoring functions
-    os.makedirs('models', exist_ok=True)
     with open('models/visa_model.pkl', 'wb') as f:
         pickle.dump({
             'calculate_score': calculate_score,

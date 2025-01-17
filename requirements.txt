@@ -5,5 +5,3 @@ click==7.1.2
 itsdangerous==2.0.1
 Jinja2==3.0.1
 MarkupSafe==2.0.1
-numpy==1.18.5
-pandas==1.1.5
