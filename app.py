@@ -1,19 +1,11 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request
 import os
 
 app = Flask(__name__)
 
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('.', path)
-
 @app.route('/')
 def home():
-    return send_from_directory('.', 'index.html')
-
-@app.route('/chat')
-def chat():
-    return send_from_directory('.', 'chat.html')
+    return 'Hello World!'
 
 @app.route('/api/chat', methods=['POST'])
 def process_chat():
